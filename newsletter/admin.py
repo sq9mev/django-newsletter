@@ -70,6 +70,38 @@ class SubmissionAdmin(admin.ModelAdmin, ExtendibleModelAdminMixin):
     save_as = True
     filter_horizontal = ('subscriptions',)
 
+    """ Dynamic admin options """
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.prepared:
+            return ('message', 'publish_date', 'admin_subscriptions_list', 'prepared', 'sent')
+        
+        return ('prepared', 'sent',)
+
+    def get_fieldsets(self, request, obj=None):
+        if obj and obj.prepared:
+            fs = (
+                (None, {'fields': ('message', 'admin_subscriptions_list')}),
+                (None, {'fields': ('publish_date', 'publish')}),
+                (None, {'fields': ('prepared', 'sent')})
+            )
+        else:
+            fs = (
+                (None, {'fields': ('message', 'subscriptions')}),
+                (None, {'fields': ('publish_date', 'publish')}),
+                (None, {'fields': ('prepared', 'sent')})
+            )
+        return fs
+        # if obj and obj.prepared:
+        
+    
+    def admin_subscriptions_list(self, obj):
+        ls = []
+        for subscription in obj.subscriptions.all():
+            ls.append(unicode(subscription.get_recipient()))
+
+        return ', '.join(ls)
+    admin_subscriptions_list.short_description = _('recipients')
+    
     """ List extensions """
     def admin_message(self, obj):
         return '<a href="%d/">%s</a>' % (obj.id, obj.message.title)

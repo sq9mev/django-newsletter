@@ -508,6 +508,6 @@ class Submission(models.Model):
     publish_date = models.DateTimeField(verbose_name=_('publication date'), blank=True, null=True, default=datetime.now(), db_index=True) 
     publish = models.BooleanField(default=True, verbose_name=_('publish'), help_text=_('Publish in archive.'), db_index=True)
 
-    prepared = models.BooleanField(default=False, verbose_name=_('prepared'), db_index=True, editable=False)
-    sent = models.BooleanField(default=False, verbose_name=_('sent'), db_index=True, editable=False)
+    prepared = models.BooleanField(default=False, verbose_name=_('prepared'), db_index=True)
+    sent = models.BooleanField(default=False, verbose_name=_('sent'), db_index=True)
     sending = models.BooleanField(default=False, verbose_name=_('sending'), db_index=True, editable=False)
